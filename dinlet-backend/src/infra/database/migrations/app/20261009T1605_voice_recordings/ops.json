@@ -1,0 +1,569 @@
+[
+  {
+    "id": "table.recording_clips",
+    "label": "Create table \"recording_clips\"",
+    "summary": "Creates table \"recording_clips\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "recording_clips"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"recording_clips\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"recording_clips\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"recording_clips\"",
+        "sql": "CREATE TABLE \"public\".\"recording_clips\" (\n  \"audio_key\" text NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"duration_ms\" int4 NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"mime_type\" text NOT NULL,\n  \"position\" int4 NOT NULL,\n  \"recording_id\" int4 NOT NULL,\n  \"size_bytes\" int4 NOT NULL,\n  \"updated_at\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"recording_clips\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"recording_clips\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.section_recordings",
+    "label": "Create table \"section_recordings\"",
+    "summary": "Creates table \"section_recordings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "section_recordings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"section_recordings\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"section_recordings\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"section_recordings\"",
+        "sql": "CREATE TABLE \"public\".\"section_recordings\" (\n  \"audio_key\" text,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"duration_ms\" int4,\n  \"failure_reason\" text,\n  \"id\" SERIAL NOT NULL,\n  \"mix_run\" int4 DEFAULT 0 NOT NULL,\n  \"recap_duration_ms\" int4,\n  \"recap_start_ms\" int4,\n  \"script_hash\" text NOT NULL,\n  \"section_id\" int4 NOT NULL,\n  \"size_bytes\" int4,\n  \"status\" text DEFAULT 'DRAFT' NOT NULL,\n  \"updated_at\" timestamptz NOT NULL,\n  \"use_own_voice\" bool DEFAULT true NOT NULL,\n  \"user_id\" int4 NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"section_recordings_status_check_7246f521\" CHECK (\"status\" IN ('DRAFT', 'PROCESSING', 'READY', 'FAILED'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"section_recordings\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"section_recordings\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.voice_settings",
+    "label": "Create table \"voice_settings\"",
+    "summary": "Creates table \"voice_settings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "voice_settings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"voice_settings\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"voice_settings\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"voice_settings\"",
+        "sql": "CREATE TABLE \"public\".\"voice_settings\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"updated_at\" timestamptz NOT NULL,\n  \"user_id\" int4 NOT NULL,\n  \"voice\" text DEFAULT 'STANDARD' NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"voice_settings_voice_check_471d6cac\" CHECK (\"voice\" IN ('STANDARD', 'NATURAL', 'OWN'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"voice_settings\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"voice_settings\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.recording_clips.recording_clips_recording_id_position_key",
+    "label": "Add unique constraint on \"recording_clips\" (recording_id, position)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "recording_clips_recording_id_position_key",
+        "table": "recording_clips"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"recording_clips_recording_id_position_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "recording_clips_recording_id_position_key",
+          "public",
+          "\"public\".\"recording_clips\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"recording_clips_recording_id_position_key\"",
+        "sql": "ALTER TABLE \"public\".\"recording_clips\" ADD CONSTRAINT \"recording_clips_recording_id_position_key\" UNIQUE (\"recording_id\", \"position\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"recording_clips_recording_id_position_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "recording_clips_recording_id_position_key",
+          "public",
+          "\"public\".\"recording_clips\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.section_recordings.section_recordings_user_id_section_id_key",
+    "label": "Add unique constraint on \"section_recordings\" (user_id, section_id)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "section_recordings_user_id_section_id_key",
+        "table": "section_recordings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"section_recordings_user_id_section_id_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "section_recordings_user_id_section_id_key",
+          "public",
+          "\"public\".\"section_recordings\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"section_recordings_user_id_section_id_key\"",
+        "sql": "ALTER TABLE \"public\".\"section_recordings\" ADD CONSTRAINT \"section_recordings_user_id_section_id_key\" UNIQUE (\"user_id\", \"section_id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"section_recordings_user_id_section_id_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "section_recordings_user_id_section_id_key",
+          "public",
+          "\"public\".\"section_recordings\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.voice_settings.voice_settings_user_id_key",
+    "label": "Add unique constraint on \"voice_settings\" (user_id)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "voice_settings_user_id_key",
+        "table": "voice_settings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"voice_settings_user_id_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "voice_settings_user_id_key",
+          "public",
+          "\"public\".\"voice_settings\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"voice_settings_user_id_key\"",
+        "sql": "ALTER TABLE \"public\".\"voice_settings\" ADD CONSTRAINT \"voice_settings_user_id_key\" UNIQUE (\"user_id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"voice_settings_user_id_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "voice_settings_user_id_key",
+          "public",
+          "\"public\".\"voice_settings\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.recording_clips.recording_clips_recording_id_idx_065a3de5",
+    "label": "Create index \"recording_clips_recording_id_idx_065a3de5\" on \"recording_clips\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "recording_clips_recording_id_idx_065a3de5",
+        "table": "recording_clips"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"recording_clips_recording_id_idx_065a3de5\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"recording_clips_recording_id_idx_065a3de5\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"recording_clips_recording_id_idx_065a3de5\"",
+        "sql": "CREATE INDEX \"recording_clips_recording_id_idx_065a3de5\" ON \"public\".\"recording_clips\" (\"recording_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"recording_clips_recording_id_idx_065a3de5\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"recording_clips_recording_id_idx_065a3de5\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.section_recordings.section_recordings_section_id_idx_13db6de7",
+    "label": "Create index \"section_recordings_section_id_idx_13db6de7\" on \"section_recordings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "section_recordings_section_id_idx_13db6de7",
+        "table": "section_recordings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"section_recordings_section_id_idx_13db6de7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"section_recordings_section_id_idx_13db6de7\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"section_recordings_section_id_idx_13db6de7\"",
+        "sql": "CREATE INDEX \"section_recordings_section_id_idx_13db6de7\" ON \"public\".\"section_recordings\" (\"section_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"section_recordings_section_id_idx_13db6de7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"section_recordings_section_id_idx_13db6de7\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.section_recordings.section_recordings_user_id_idx_6c952402",
+    "label": "Create index \"section_recordings_user_id_idx_6c952402\" on \"section_recordings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "section_recordings_user_id_idx_6c952402",
+        "table": "section_recordings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"section_recordings_user_id_idx_6c952402\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"section_recordings_user_id_idx_6c952402\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"section_recordings_user_id_idx_6c952402\"",
+        "sql": "CREATE INDEX \"section_recordings_user_id_idx_6c952402\" ON \"public\".\"section_recordings\" (\"user_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"section_recordings_user_id_idx_6c952402\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"section_recordings_user_id_idx_6c952402\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.section_recordings.section_recordings_user_id_updated_at_idx_f41263b4",
+    "label": "Create index \"section_recordings_user_id_updated_at_idx_f41263b4\" on \"section_recordings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "section_recordings_user_id_updated_at_idx_f41263b4",
+        "table": "section_recordings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"section_recordings_user_id_updated_at_idx_f41263b4\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"section_recordings_user_id_updated_at_idx_f41263b4\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"section_recordings_user_id_updated_at_idx_f41263b4\"",
+        "sql": "CREATE INDEX \"section_recordings_user_id_updated_at_idx_f41263b4\" ON \"public\".\"section_recordings\" (\"user_id\", \"updated_at\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"section_recordings_user_id_updated_at_idx_f41263b4\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"section_recordings_user_id_updated_at_idx_f41263b4\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.recording_clips.recording_clips_recording_id_fkey",
+    "label": "Add foreign key \"recording_clips_recording_id_fkey\" on \"recording_clips\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "recording_clips_recording_id_fkey",
+        "table": "recording_clips"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"recording_clips_recording_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "recording_clips_recording_id_fkey",
+          "public",
+          "\"public\".\"recording_clips\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"recording_clips_recording_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"recording_clips\"\nADD CONSTRAINT \"recording_clips_recording_id_fkey\"\nFOREIGN KEY (\"recording_id\")\nREFERENCES \"public\".\"section_recordings\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"recording_clips_recording_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "recording_clips_recording_id_fkey",
+          "public",
+          "\"public\".\"recording_clips\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.section_recordings.section_recordings_user_id_fkey",
+    "label": "Add foreign key \"section_recordings_user_id_fkey\" on \"section_recordings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "section_recordings_user_id_fkey",
+        "table": "section_recordings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"section_recordings_user_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "section_recordings_user_id_fkey",
+          "public",
+          "\"public\".\"section_recordings\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"section_recordings_user_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"section_recordings\"\nADD CONSTRAINT \"section_recordings_user_id_fkey\"\nFOREIGN KEY (\"user_id\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"section_recordings_user_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "section_recordings_user_id_fkey",
+          "public",
+          "\"public\".\"section_recordings\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.section_recordings.section_recordings_section_id_fkey",
+    "label": "Add foreign key \"section_recordings_section_id_fkey\" on \"section_recordings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "section_recordings_section_id_fkey",
+        "table": "section_recordings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"section_recordings_section_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "section_recordings_section_id_fkey",
+          "public",
+          "\"public\".\"section_recordings\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"section_recordings_section_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"section_recordings\"\nADD CONSTRAINT \"section_recordings_section_id_fkey\"\nFOREIGN KEY (\"section_id\")\nREFERENCES \"public\".\"sections\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"section_recordings_section_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "section_recordings_section_id_fkey",
+          "public",
+          "\"public\".\"section_recordings\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.voice_settings.voice_settings_user_id_fkey",
+    "label": "Add foreign key \"voice_settings_user_id_fkey\" on \"voice_settings\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "voice_settings_user_id_fkey",
+        "table": "voice_settings"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"voice_settings_user_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "voice_settings_user_id_fkey",
+          "public",
+          "\"public\".\"voice_settings\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"voice_settings_user_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"voice_settings\"\nADD CONSTRAINT \"voice_settings_user_id_fkey\"\nFOREIGN KEY (\"user_id\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"voice_settings_user_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "voice_settings_user_id_fkey",
+          "public",
+          "\"public\".\"voice_settings\""
+        ]
+      }
+    ]
+  }
+]

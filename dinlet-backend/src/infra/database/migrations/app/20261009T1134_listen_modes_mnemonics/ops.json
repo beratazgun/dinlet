@@ -1,0 +1,514 @@
+[
+  {
+    "id": "table.mnemonics",
+    "label": "Create table \"mnemonics\"",
+    "summary": "Creates table \"mnemonics\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "mnemonics"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"mnemonics\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"mnemonics\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"mnemonics\"",
+        "sql": "CREATE TABLE \"public\".\"mnemonics\" (\n  \"audio_key\" text,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"dismissed\" bool DEFAULT false NOT NULL,\n  \"document_id\" int4 NOT NULL,\n  \"duration_ms\" int4,\n  \"explanation\" text NOT NULL,\n  \"hook\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"kept\" bool DEFAULT false NOT NULL,\n  \"position\" int4 DEFAULT 0 NOT NULL,\n  \"section_id\" int4,\n  \"topic\" text NOT NULL,\n  \"updated_at\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"mnemonics\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"mnemonics\""]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documents.mnemonic_status",
+    "label": "Add column \"mnemonic_status\" to \"documents\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "mnemonic_status",
+        "table": "documents"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"mnemonic_status\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "documents", "mnemonic_status"]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"mnemonic_status\"",
+        "sql": "ALTER TABLE \"public\".\"documents\" ADD COLUMN \"mnemonic_status\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"mnemonic_status\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "documents", "mnemonic_status"]
+      }
+    ]
+  },
+  {
+    "id": "column.public.sections.quick_audio_key",
+    "label": "Add column \"quick_audio_key\" to \"sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "quick_audio_key",
+        "table": "sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"quick_audio_key\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "quick_audio_key"]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"quick_audio_key\"",
+        "sql": "ALTER TABLE \"public\".\"sections\" ADD COLUMN \"quick_audio_key\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"quick_audio_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "quick_audio_key"]
+      }
+    ]
+  },
+  {
+    "id": "column.public.sections.quick_duration_ms",
+    "label": "Add column \"quick_duration_ms\" to \"sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "quick_duration_ms",
+        "table": "sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"quick_duration_ms\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "quick_duration_ms"]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"quick_duration_ms\"",
+        "sql": "ALTER TABLE \"public\".\"sections\" ADD COLUMN \"quick_duration_ms\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"quick_duration_ms\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "quick_duration_ms"]
+      }
+    ]
+  },
+  {
+    "id": "column.public.sections.quick_script",
+    "label": "Add column \"quick_script\" to \"sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "quick_script",
+        "table": "sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"quick_script\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "quick_script"]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"quick_script\"",
+        "sql": "ALTER TABLE \"public\".\"sections\" ADD COLUMN \"quick_script\" jsonb"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"quick_script\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "quick_script"]
+      }
+    ]
+  },
+  {
+    "id": "column.public.sections.quick_script_hash",
+    "label": "Add column \"quick_script_hash\" to \"sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "quick_script_hash",
+        "table": "sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"quick_script_hash\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "quick_script_hash"]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"quick_script_hash\"",
+        "sql": "ALTER TABLE \"public\".\"sections\" ADD COLUMN \"quick_script_hash\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"quick_script_hash\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "quick_script_hash"]
+      }
+    ]
+  },
+  {
+    "id": "column.public.sections.quick_status",
+    "label": "Add column \"quick_status\" to \"sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "quick_status",
+        "table": "sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"quick_status\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "quick_status"]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"quick_status\"",
+        "sql": "ALTER TABLE \"public\".\"sections\" ADD COLUMN \"quick_status\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"quick_status\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "quick_status"]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.documents.documents_mnemonic_status_check_e8ec3e19",
+    "label": "Add check constraint \"documents_mnemonic_status_check_e8ec3e19\" on \"documents\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "documents_mnemonic_status_check_e8ec3e19",
+        "table": "documents"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"documents_mnemonic_status_check_e8ec3e19\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documents_mnemonic_status_check_e8ec3e19",
+          "public",
+          "\"public\".\"documents\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"documents_mnemonic_status_check_e8ec3e19\"",
+        "sql": "ALTER TABLE \"public\".\"documents\" ADD CONSTRAINT \"documents_mnemonic_status_check_e8ec3e19\" CHECK (\"mnemonic_status\" IN ('PENDING', 'READY', 'FAILED'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"documents_mnemonic_status_check_e8ec3e19\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documents_mnemonic_status_check_e8ec3e19",
+          "public",
+          "\"public\".\"documents\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.sections.sections_quick_status_check_58f1db0c",
+    "label": "Add check constraint \"sections_quick_status_check_58f1db0c\" on \"sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "sections_quick_status_check_58f1db0c",
+        "table": "sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"sections_quick_status_check_58f1db0c\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "sections_quick_status_check_58f1db0c",
+          "public",
+          "\"public\".\"sections\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"sections_quick_status_check_58f1db0c\"",
+        "sql": "ALTER TABLE \"public\".\"sections\" ADD CONSTRAINT \"sections_quick_status_check_58f1db0c\" CHECK (\"quick_status\" IN ('PENDING', 'READY', 'FAILED'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"sections_quick_status_check_58f1db0c\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "sections_quick_status_check_58f1db0c",
+          "public",
+          "\"public\".\"sections\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.mnemonics.mnemonics_document_id_idx_d3d0944e",
+    "label": "Create index \"mnemonics_document_id_idx_d3d0944e\" on \"mnemonics\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "mnemonics_document_id_idx_d3d0944e",
+        "table": "mnemonics"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"mnemonics_document_id_idx_d3d0944e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"mnemonics_document_id_idx_d3d0944e\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"mnemonics_document_id_idx_d3d0944e\"",
+        "sql": "CREATE INDEX \"mnemonics_document_id_idx_d3d0944e\" ON \"public\".\"mnemonics\" (\"document_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"mnemonics_document_id_idx_d3d0944e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"mnemonics_document_id_idx_d3d0944e\""]
+      }
+    ]
+  },
+  {
+    "id": "index.mnemonics.mnemonics_document_id_position_idx_fad910b7",
+    "label": "Create index \"mnemonics_document_id_position_idx_fad910b7\" on \"mnemonics\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "mnemonics_document_id_position_idx_fad910b7",
+        "table": "mnemonics"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"mnemonics_document_id_position_idx_fad910b7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"mnemonics_document_id_position_idx_fad910b7\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"mnemonics_document_id_position_idx_fad910b7\"",
+        "sql": "CREATE INDEX \"mnemonics_document_id_position_idx_fad910b7\" ON \"public\".\"mnemonics\" (\"document_id\", \"position\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"mnemonics_document_id_position_idx_fad910b7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"mnemonics_document_id_position_idx_fad910b7\""]
+      }
+    ]
+  },
+  {
+    "id": "index.mnemonics.mnemonics_section_id_idx_13db6de7",
+    "label": "Create index \"mnemonics_section_id_idx_13db6de7\" on \"mnemonics\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "mnemonics_section_id_idx_13db6de7",
+        "table": "mnemonics"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"mnemonics_section_id_idx_13db6de7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"mnemonics_section_id_idx_13db6de7\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"mnemonics_section_id_idx_13db6de7\"",
+        "sql": "CREATE INDEX \"mnemonics_section_id_idx_13db6de7\" ON \"public\".\"mnemonics\" (\"section_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"mnemonics_section_id_idx_13db6de7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"mnemonics_section_id_idx_13db6de7\""]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.mnemonics.mnemonics_document_id_fkey",
+    "label": "Add foreign key \"mnemonics_document_id_fkey\" on \"mnemonics\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "mnemonics_document_id_fkey",
+        "table": "mnemonics"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"mnemonics_document_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "mnemonics_document_id_fkey",
+          "public",
+          "\"public\".\"mnemonics\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"mnemonics_document_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"mnemonics\"\nADD CONSTRAINT \"mnemonics_document_id_fkey\"\nFOREIGN KEY (\"document_id\")\nREFERENCES \"public\".\"documents\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"mnemonics_document_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "mnemonics_document_id_fkey",
+          "public",
+          "\"public\".\"mnemonics\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.mnemonics.mnemonics_section_id_fkey",
+    "label": "Add foreign key \"mnemonics_section_id_fkey\" on \"mnemonics\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "mnemonics_section_id_fkey",
+        "table": "mnemonics"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"mnemonics_section_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "mnemonics_section_id_fkey",
+          "public",
+          "\"public\".\"mnemonics\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"mnemonics_section_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"mnemonics\"\nADD CONSTRAINT \"mnemonics_section_id_fkey\"\nFOREIGN KEY (\"section_id\")\nREFERENCES \"public\".\"sections\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"mnemonics_section_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "mnemonics_section_id_fkey",
+          "public",
+          "\"public\".\"mnemonics\""
+        ]
+      }
+    ]
+  }
+]

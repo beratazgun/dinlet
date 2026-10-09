@@ -1,0 +1,779 @@
+[
+  {
+    "id": "dropCheckConstraint.notifications.notifications_entity_type_check_7aa73585",
+    "label": "Drop check constraint \"notifications_entity_type_check_7aa73585\" on \"notifications\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "notifications_entity_type_check_7aa73585",
+        "table": "notifications"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"notifications_entity_type_check_7aa73585\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notifications_entity_type_check_7aa73585",
+          "public",
+          "\"public\".\"notifications\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"notifications_entity_type_check_7aa73585\"",
+        "sql": "ALTER TABLE \"public\".\"notifications\" DROP CONSTRAINT \"notifications_entity_type_check_7aa73585\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"notifications_entity_type_check_7aa73585\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notifications_entity_type_check_7aa73585",
+          "public",
+          "\"public\".\"notifications\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropCheckConstraint.notifications.notifications_type_check_db261f90",
+    "label": "Drop check constraint \"notifications_type_check_db261f90\" on \"notifications\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "notifications_type_check_db261f90",
+        "table": "notifications"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"notifications_type_check_db261f90\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notifications_type_check_db261f90",
+          "public",
+          "\"public\".\"notifications\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"notifications_type_check_db261f90\"",
+        "sql": "ALTER TABLE \"public\".\"notifications\" DROP CONSTRAINT \"notifications_type_check_db261f90\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"notifications_type_check_db261f90\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notifications_type_check_db261f90",
+          "public",
+          "\"public\".\"notifications\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropCheckConstraint.store_items.store_items_source_check_3cece20d",
+    "label": "Drop check constraint \"store_items_source_check_3cece20d\" on \"store_items\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "store_items_source_check_3cece20d",
+        "table": "store_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"store_items_source_check_3cece20d\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_items_source_check_3cece20d",
+          "public",
+          "\"public\".\"store_items\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"store_items_source_check_3cece20d\"",
+        "sql": "ALTER TABLE \"public\".\"store_items\" DROP CONSTRAINT \"store_items_source_check_3cece20d\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"store_items_source_check_3cece20d\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_items_source_check_3cece20d",
+          "public",
+          "\"public\".\"store_items\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.store_submissions",
+    "label": "Create table \"store_submissions\"",
+    "summary": "Creates table \"store_submissions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "store_submissions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"store_submissions\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"store_submissions\"",
+        "sql": "CREATE TABLE \"public\".\"store_submissions\" (\n  \"category_ids\" jsonb NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text NOT NULL,\n  \"document_id\" int4,\n  \"id\" SERIAL NOT NULL,\n  \"rejection_reason\" text,\n  \"reviewed_at\" timestamptz,\n  \"reviewed_by\" int4,\n  \"rights_confirmed_at\" timestamptz NOT NULL,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"store_item_id\" int4,\n  \"title\" text NOT NULL,\n  \"updated_at\" timestamptz NOT NULL,\n  \"user_id\" int4 NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"store_submissions_status_check_9a526491\" CHECK (\"status\" IN ('PENDING', 'APPROVED', 'REJECTED', 'WITHDRAWN'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"store_submissions\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documents.is_store_master",
+    "label": "Add column \"is_store_master\" to \"documents\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "is_store_master",
+        "table": "documents"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"is_store_master\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documents",
+          "is_store_master"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"is_store_master\"",
+        "sql": "ALTER TABLE \"public\".\"documents\" ADD COLUMN \"is_store_master\" bool DEFAULT false NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"is_store_master\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documents",
+          "is_store_master"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.store_items.author_user_id",
+    "label": "Add column \"author_user_id\" to \"store_items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "author_user_id",
+        "table": "store_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"author_user_id\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "store_items",
+          "author_user_id"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"author_user_id\"",
+        "sql": "ALTER TABLE \"public\".\"store_items\" ADD COLUMN \"author_user_id\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"author_user_id\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "store_items",
+          "author_user_id"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.notifications.notifications_entity_type_check_b15fe126",
+    "label": "Add check constraint \"notifications_entity_type_check_b15fe126\" on \"notifications\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "notifications_entity_type_check_b15fe126",
+        "table": "notifications"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"notifications_entity_type_check_b15fe126\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notifications_entity_type_check_b15fe126",
+          "public",
+          "\"public\".\"notifications\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"notifications_entity_type_check_b15fe126\"",
+        "sql": "ALTER TABLE \"public\".\"notifications\" ADD CONSTRAINT \"notifications_entity_type_check_b15fe126\" CHECK (\"entity_type\" IN ('Document', 'StoreSubmission'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"notifications_entity_type_check_b15fe126\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notifications_entity_type_check_b15fe126",
+          "public",
+          "\"public\".\"notifications\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.notifications.notifications_type_check_7c1fb41b",
+    "label": "Add check constraint \"notifications_type_check_7c1fb41b\" on \"notifications\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "notifications_type_check_7c1fb41b",
+        "table": "notifications"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"notifications_type_check_7c1fb41b\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notifications_type_check_7c1fb41b",
+          "public",
+          "\"public\".\"notifications\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"notifications_type_check_7c1fb41b\"",
+        "sql": "ALTER TABLE \"public\".\"notifications\" ADD CONSTRAINT \"notifications_type_check_7c1fb41b\" CHECK (\"type\" IN ('PASSWORD_CHANGED', 'ACCOUNT_LOCKED', 'NEW_DEVICE_LOGIN', 'DOCUMENT_READY', 'DOCUMENT_FAILED', 'STORE_SUBMISSION_APPROVED', 'STORE_SUBMISSION_REJECTED'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"notifications_type_check_7c1fb41b\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notifications_type_check_7c1fb41b",
+          "public",
+          "\"public\".\"notifications\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.store_items.store_items_source_check_5723d97c",
+    "label": "Add check constraint \"store_items_source_check_5723d97c\" on \"store_items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "store_items_source_check_5723d97c",
+        "table": "store_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"store_items_source_check_5723d97c\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_items_source_check_5723d97c",
+          "public",
+          "\"public\".\"store_items\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"store_items_source_check_5723d97c\"",
+        "sql": "ALTER TABLE \"public\".\"store_items\" ADD CONSTRAINT \"store_items_source_check_5723d97c\" CHECK (\"source\" IN ('ORIGINAL', 'LEGISLATION', 'PUBLISHER', 'PUBLIC_DOMAIN', 'COMMUNITY'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"store_items_source_check_5723d97c\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_items_source_check_5723d97c",
+          "public",
+          "\"public\".\"store_items\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.store_items.store_items_author_user_id_idx_591a807e",
+    "label": "Create index \"store_items_author_user_id_idx_591a807e\" on \"store_items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "store_items_author_user_id_idx_591a807e",
+        "table": "store_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"store_items_author_user_id_idx_591a807e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_items_author_user_id_idx_591a807e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"store_items_author_user_id_idx_591a807e\"",
+        "sql": "CREATE INDEX \"store_items_author_user_id_idx_591a807e\" ON \"public\".\"store_items\" (\"author_user_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"store_items_author_user_id_idx_591a807e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_items_author_user_id_idx_591a807e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.store_submissions.store_submissions_document_id_idx_d3d0944e",
+    "label": "Create index \"store_submissions_document_id_idx_d3d0944e\" on \"store_submissions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "store_submissions_document_id_idx_d3d0944e",
+        "table": "store_submissions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"store_submissions_document_id_idx_d3d0944e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions_document_id_idx_d3d0944e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"store_submissions_document_id_idx_d3d0944e\"",
+        "sql": "CREATE INDEX \"store_submissions_document_id_idx_d3d0944e\" ON \"public\".\"store_submissions\" (\"document_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"store_submissions_document_id_idx_d3d0944e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions_document_id_idx_d3d0944e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.store_submissions.store_submissions_status_created_at_idx_1bbe8adf",
+    "label": "Create index \"store_submissions_status_created_at_idx_1bbe8adf\" on \"store_submissions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "store_submissions_status_created_at_idx_1bbe8adf",
+        "table": "store_submissions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"store_submissions_status_created_at_idx_1bbe8adf\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions_status_created_at_idx_1bbe8adf\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"store_submissions_status_created_at_idx_1bbe8adf\"",
+        "sql": "CREATE INDEX \"store_submissions_status_created_at_idx_1bbe8adf\" ON \"public\".\"store_submissions\" (\"status\", \"created_at\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"store_submissions_status_created_at_idx_1bbe8adf\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions_status_created_at_idx_1bbe8adf\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.store_submissions.store_submissions_store_item_id_idx_2ecdf496",
+    "label": "Create index \"store_submissions_store_item_id_idx_2ecdf496\" on \"store_submissions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "store_submissions_store_item_id_idx_2ecdf496",
+        "table": "store_submissions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"store_submissions_store_item_id_idx_2ecdf496\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions_store_item_id_idx_2ecdf496\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"store_submissions_store_item_id_idx_2ecdf496\"",
+        "sql": "CREATE INDEX \"store_submissions_store_item_id_idx_2ecdf496\" ON \"public\".\"store_submissions\" (\"store_item_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"store_submissions_store_item_id_idx_2ecdf496\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions_store_item_id_idx_2ecdf496\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.store_submissions.store_submissions_user_id_created_at_idx_b562028f",
+    "label": "Create index \"store_submissions_user_id_created_at_idx_b562028f\" on \"store_submissions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "store_submissions_user_id_created_at_idx_b562028f",
+        "table": "store_submissions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"store_submissions_user_id_created_at_idx_b562028f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions_user_id_created_at_idx_b562028f\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"store_submissions_user_id_created_at_idx_b562028f\"",
+        "sql": "CREATE INDEX \"store_submissions_user_id_created_at_idx_b562028f\" ON \"public\".\"store_submissions\" (\"user_id\", \"created_at\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"store_submissions_user_id_created_at_idx_b562028f\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions_user_id_created_at_idx_b562028f\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.store_submissions.store_submissions_user_id_idx_6c952402",
+    "label": "Create index \"store_submissions_user_id_idx_6c952402\" on \"store_submissions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "store_submissions_user_id_idx_6c952402",
+        "table": "store_submissions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"store_submissions_user_id_idx_6c952402\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions_user_id_idx_6c952402\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"store_submissions_user_id_idx_6c952402\"",
+        "sql": "CREATE INDEX \"store_submissions_user_id_idx_6c952402\" ON \"public\".\"store_submissions\" (\"user_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"store_submissions_user_id_idx_6c952402\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"store_submissions_user_id_idx_6c952402\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.store_items.store_items_author_user_id_fkey",
+    "label": "Add foreign key \"store_items_author_user_id_fkey\" on \"store_items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "store_items_author_user_id_fkey",
+        "table": "store_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"store_items_author_user_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_items_author_user_id_fkey",
+          "public",
+          "\"public\".\"store_items\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"store_items_author_user_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"store_items\"\nADD CONSTRAINT \"store_items_author_user_id_fkey\"\nFOREIGN KEY (\"author_user_id\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"store_items_author_user_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_items_author_user_id_fkey",
+          "public",
+          "\"public\".\"store_items\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.store_submissions.store_submissions_user_id_fkey",
+    "label": "Add foreign key \"store_submissions_user_id_fkey\" on \"store_submissions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "store_submissions_user_id_fkey",
+        "table": "store_submissions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"store_submissions_user_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_submissions_user_id_fkey",
+          "public",
+          "\"public\".\"store_submissions\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"store_submissions_user_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"store_submissions\"\nADD CONSTRAINT \"store_submissions_user_id_fkey\"\nFOREIGN KEY (\"user_id\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"store_submissions_user_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_submissions_user_id_fkey",
+          "public",
+          "\"public\".\"store_submissions\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.store_submissions.store_submissions_document_id_fkey",
+    "label": "Add foreign key \"store_submissions_document_id_fkey\" on \"store_submissions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "store_submissions_document_id_fkey",
+        "table": "store_submissions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"store_submissions_document_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_submissions_document_id_fkey",
+          "public",
+          "\"public\".\"store_submissions\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"store_submissions_document_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"store_submissions\"\nADD CONSTRAINT \"store_submissions_document_id_fkey\"\nFOREIGN KEY (\"document_id\")\nREFERENCES \"public\".\"documents\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"store_submissions_document_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_submissions_document_id_fkey",
+          "public",
+          "\"public\".\"store_submissions\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.store_submissions.store_submissions_store_item_id_fkey",
+    "label": "Add foreign key \"store_submissions_store_item_id_fkey\" on \"store_submissions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "store_submissions_store_item_id_fkey",
+        "table": "store_submissions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"store_submissions_store_item_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_submissions_store_item_id_fkey",
+          "public",
+          "\"public\".\"store_submissions\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"store_submissions_store_item_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"store_submissions\"\nADD CONSTRAINT \"store_submissions_store_item_id_fkey\"\nFOREIGN KEY (\"store_item_id\")\nREFERENCES \"public\".\"store_items\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"store_submissions_store_item_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "store_submissions_store_item_id_fkey",
+          "public",
+          "\"public\".\"store_submissions\""
+        ]
+      }
+    ]
+  }
+]

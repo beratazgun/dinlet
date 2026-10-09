@@ -1,0 +1,120 @@
+services:
+  dinlet-postgres:
+    container_name: dinlet-postgres
+    image: postgres:18
+    platform: linux/amd64
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=dinlet-user
+      - POSTGRES_PASSWORD=dinlet-pass
+      - POSTGRES_DB=dinlet-db
+    env_file:
+      - ./config/.env
+    volumes:
+      - ./data/postgres/postgres:/var/lib/postgresql
+    networks:
+      - dinlet-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dinlet-user -d dinlet-db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  dinlet-node:
+    container_name: dinlet-node
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      - CI=true
+    env_file:
+      - ./config/.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped
+    networks:
+      - dinlet-network
+    # Redis/Postgres hazır olmadan başlarsa ioredis denemeleri tükenir ve
+    # süreç çöker; sağlık kontrolü geçene kadar beklenir.
+    depends_on:
+      dinlet-postgres:
+        condition: service_healthy
+      dinlet-redis:
+        condition: service_healthy
+      dinlet-localstack:
+        condition: service_started
+
+  dinlet-localstack:
+    container_name: dinlet-localstack
+    image: localstack/localstack:4.7 # latest artık LOCALSTACK_AUTH_TOKEN istiyor
+    ports:
+      - "4566:4566"
+    environment:
+      - DEBUG=${DEBUG-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - LOCALSTACK_SERVICES=s3
+      - S3_SKIP_SIGNATURE_VALIDATION=1
+      - S3_SKIP_KMS_KEY_VALIDATION=1
+      - HOSTNAME_EXTERNAL=localhost
+      - USE_SSL=false
+      - S3_ENABLE_VIRTUAL_HOST_ADDRESSING=false
+      - LEGACY_V2_S3_PROVIDER=false
+    volumes:
+      - "./s3/volume:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./scripts/init-localstack.sh:/etc/localstack/init/ready.d/init-aws.sh"
+    networks:
+      - dinlet-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  dinlet-redis:
+    container_name: dinlet-redis
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./data/redis/redis:/data"
+    networks:
+      - dinlet-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Python worker: `extract` (Docling) ve `tts` (ema-lightning) kuyrukları.
+  dinlet-tts:
+    container_name: dinlet-tts
+    build:
+      context: ../dinlet-worker
+    env_file:
+      - ../dinlet-worker/.env
+    volumes:
+      # Model ağırlıkları (Hugging Face, EasyOCR) kalıcı tutulur.
+      - ./data/models:/models
+      - ../dinlet-worker:/app
+    # API'nin yanıt süresi ağır işlerden etkilenmesin (doküman §6).
+    cpus: "1.5"
+    mem_limit: 4g
+    restart: unless-stopped
+    networks:
+      - dinlet-network
+    depends_on:
+      dinlet-redis:
+        condition: service_healthy
+      dinlet-localstack:
+        condition: service_started
+
+networks:
+  dinlet-network:
+    driver: bridge

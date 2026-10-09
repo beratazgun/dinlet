@@ -1,0 +1,648 @@
+[
+  {
+    "id": "table.quiz_questions",
+    "label": "Create table \"quiz_questions\"",
+    "summary": "Creates table \"quiz_questions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "quiz_questions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"quiz_questions\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"quiz_questions\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"quiz_questions\"",
+        "sql": "CREATE TABLE \"public\".\"quiz_questions\" (\n  \"answer\" text NOT NULL,\n  \"answer_audio_key\" text NOT NULL,\n  \"answer_duration_ms\" int4 NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"detail\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"order\" int4 NOT NULL,\n  \"question\" text NOT NULL,\n  \"question_audio_key\" text NOT NULL,\n  \"question_duration_ms\" int4 NOT NULL,\n  \"section_id\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"quiz_questions\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"quiz_questions\""]
+      }
+    ]
+  },
+  {
+    "id": "table.review_days",
+    "label": "Create table \"review_days\"",
+    "summary": "Creates table \"review_days\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "review_days"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"review_days\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"review_days\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"review_days\"",
+        "sql": "CREATE TABLE \"public\".\"review_days\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"day\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"reviewed_sections\" int4 DEFAULT 0 NOT NULL,\n  \"updated_at\" timestamptz NOT NULL,\n  \"user_id\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"review_days\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"review_days\""]
+      }
+    ]
+  },
+  {
+    "id": "table.review_items",
+    "label": "Create table \"review_items\"",
+    "summary": "Creates table \"review_items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "review_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"review_items\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"review_items\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"review_items\"",
+        "sql": "CREATE TABLE \"public\".\"review_items\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"due_on\" text NOT NULL,\n  \"graduated\" bool DEFAULT false NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"last_reviewed_on\" text,\n  \"section_id\" int4 NOT NULL,\n  \"stage\" int4 DEFAULT 0 NOT NULL,\n  \"updated_at\" timestamptz NOT NULL,\n  \"user_id\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"review_items\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"review_items\""]
+      }
+    ]
+  },
+  {
+    "id": "column.public.sections.recap_audio_key",
+    "label": "Add column \"recap_audio_key\" to \"sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "recap_audio_key",
+        "table": "sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"recap_audio_key\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "recap_audio_key"]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"recap_audio_key\"",
+        "sql": "ALTER TABLE \"public\".\"sections\" ADD COLUMN \"recap_audio_key\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"recap_audio_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "recap_audio_key"]
+      }
+    ]
+  },
+  {
+    "id": "column.public.sections.recap_duration_ms",
+    "label": "Add column \"recap_duration_ms\" to \"sections\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "recap_duration_ms",
+        "table": "sections"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"recap_duration_ms\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "recap_duration_ms"]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"recap_duration_ms\"",
+        "sql": "ALTER TABLE \"public\".\"sections\" ADD COLUMN \"recap_duration_ms\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"recap_duration_ms\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": ["public", "sections", "recap_duration_ms"]
+      }
+    ]
+  },
+  {
+    "id": "unique.quiz_questions.quiz_questions_section_id_order_key",
+    "label": "Add unique constraint on \"quiz_questions\" (section_id, order)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "quiz_questions_section_id_order_key",
+        "table": "quiz_questions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"quiz_questions_section_id_order_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "quiz_questions_section_id_order_key",
+          "public",
+          "\"public\".\"quiz_questions\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"quiz_questions_section_id_order_key\"",
+        "sql": "ALTER TABLE \"public\".\"quiz_questions\" ADD CONSTRAINT \"quiz_questions_section_id_order_key\" UNIQUE (\"section_id\", \"order\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"quiz_questions_section_id_order_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "quiz_questions_section_id_order_key",
+          "public",
+          "\"public\".\"quiz_questions\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.review_days.review_days_user_id_day_key",
+    "label": "Add unique constraint on \"review_days\" (user_id, day)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "review_days_user_id_day_key",
+        "table": "review_days"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"review_days_user_id_day_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "review_days_user_id_day_key",
+          "public",
+          "\"public\".\"review_days\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"review_days_user_id_day_key\"",
+        "sql": "ALTER TABLE \"public\".\"review_days\" ADD CONSTRAINT \"review_days_user_id_day_key\" UNIQUE (\"user_id\", \"day\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"review_days_user_id_day_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "review_days_user_id_day_key",
+          "public",
+          "\"public\".\"review_days\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.review_items.review_items_user_id_section_id_key",
+    "label": "Add unique constraint on \"review_items\" (user_id, section_id)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "review_items_user_id_section_id_key",
+        "table": "review_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"review_items_user_id_section_id_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "review_items_user_id_section_id_key",
+          "public",
+          "\"public\".\"review_items\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"review_items_user_id_section_id_key\"",
+        "sql": "ALTER TABLE \"public\".\"review_items\" ADD CONSTRAINT \"review_items_user_id_section_id_key\" UNIQUE (\"user_id\", \"section_id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"review_items_user_id_section_id_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "review_items_user_id_section_id_key",
+          "public",
+          "\"public\".\"review_items\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.quiz_questions.quiz_questions_section_id_idx_13db6de7",
+    "label": "Create index \"quiz_questions_section_id_idx_13db6de7\" on \"quiz_questions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "quiz_questions_section_id_idx_13db6de7",
+        "table": "quiz_questions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"quiz_questions_section_id_idx_13db6de7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"quiz_questions_section_id_idx_13db6de7\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"quiz_questions_section_id_idx_13db6de7\"",
+        "sql": "CREATE INDEX \"quiz_questions_section_id_idx_13db6de7\" ON \"public\".\"quiz_questions\" (\"section_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"quiz_questions_section_id_idx_13db6de7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"quiz_questions_section_id_idx_13db6de7\""]
+      }
+    ]
+  },
+  {
+    "id": "index.review_days.review_days_user_id_idx_6c952402",
+    "label": "Create index \"review_days_user_id_idx_6c952402\" on \"review_days\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "review_days_user_id_idx_6c952402",
+        "table": "review_days"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"review_days_user_id_idx_6c952402\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"review_days_user_id_idx_6c952402\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"review_days_user_id_idx_6c952402\"",
+        "sql": "CREATE INDEX \"review_days_user_id_idx_6c952402\" ON \"public\".\"review_days\" (\"user_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"review_days_user_id_idx_6c952402\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"review_days_user_id_idx_6c952402\""]
+      }
+    ]
+  },
+  {
+    "id": "index.review_items.review_items_section_id_idx_13db6de7",
+    "label": "Create index \"review_items_section_id_idx_13db6de7\" on \"review_items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "review_items_section_id_idx_13db6de7",
+        "table": "review_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"review_items_section_id_idx_13db6de7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"review_items_section_id_idx_13db6de7\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"review_items_section_id_idx_13db6de7\"",
+        "sql": "CREATE INDEX \"review_items_section_id_idx_13db6de7\" ON \"public\".\"review_items\" (\"section_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"review_items_section_id_idx_13db6de7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"review_items_section_id_idx_13db6de7\""]
+      }
+    ]
+  },
+  {
+    "id": "index.review_items.review_items_user_id_graduated_due_on_idx_64fbc4ad",
+    "label": "Create index \"review_items_user_id_graduated_due_on_idx_64fbc4ad\" on \"review_items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "review_items_user_id_graduated_due_on_idx_64fbc4ad",
+        "table": "review_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"review_items_user_id_graduated_due_on_idx_64fbc4ad\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"review_items_user_id_graduated_due_on_idx_64fbc4ad\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"review_items_user_id_graduated_due_on_idx_64fbc4ad\"",
+        "sql": "CREATE INDEX \"review_items_user_id_graduated_due_on_idx_64fbc4ad\" ON \"public\".\"review_items\" (\"user_id\", \"graduated\", \"due_on\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"review_items_user_id_graduated_due_on_idx_64fbc4ad\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"review_items_user_id_graduated_due_on_idx_64fbc4ad\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.review_items.review_items_user_id_idx_6c952402",
+    "label": "Create index \"review_items_user_id_idx_6c952402\" on \"review_items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "review_items_user_id_idx_6c952402",
+        "table": "review_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"review_items_user_id_idx_6c952402\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": ["\"public\".\"review_items_user_id_idx_6c952402\""]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"review_items_user_id_idx_6c952402\"",
+        "sql": "CREATE INDEX \"review_items_user_id_idx_6c952402\" ON \"public\".\"review_items\" (\"user_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"review_items_user_id_idx_6c952402\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": ["\"public\".\"review_items_user_id_idx_6c952402\""]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.quiz_questions.quiz_questions_section_id_fkey",
+    "label": "Add foreign key \"quiz_questions_section_id_fkey\" on \"quiz_questions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "quiz_questions_section_id_fkey",
+        "table": "quiz_questions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"quiz_questions_section_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "quiz_questions_section_id_fkey",
+          "public",
+          "\"public\".\"quiz_questions\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"quiz_questions_section_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"quiz_questions\"\nADD CONSTRAINT \"quiz_questions_section_id_fkey\"\nFOREIGN KEY (\"section_id\")\nREFERENCES \"public\".\"sections\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"quiz_questions_section_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "quiz_questions_section_id_fkey",
+          "public",
+          "\"public\".\"quiz_questions\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.review_days.review_days_user_id_fkey",
+    "label": "Add foreign key \"review_days_user_id_fkey\" on \"review_days\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "review_days_user_id_fkey",
+        "table": "review_days"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"review_days_user_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "review_days_user_id_fkey",
+          "public",
+          "\"public\".\"review_days\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"review_days_user_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"review_days\"\nADD CONSTRAINT \"review_days_user_id_fkey\"\nFOREIGN KEY (\"user_id\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"review_days_user_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "review_days_user_id_fkey",
+          "public",
+          "\"public\".\"review_days\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.review_items.review_items_user_id_fkey",
+    "label": "Add foreign key \"review_items_user_id_fkey\" on \"review_items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "review_items_user_id_fkey",
+        "table": "review_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"review_items_user_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "review_items_user_id_fkey",
+          "public",
+          "\"public\".\"review_items\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"review_items_user_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"review_items\"\nADD CONSTRAINT \"review_items_user_id_fkey\"\nFOREIGN KEY (\"user_id\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"review_items_user_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "review_items_user_id_fkey",
+          "public",
+          "\"public\".\"review_items\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.review_items.review_items_section_id_fkey",
+    "label": "Add foreign key \"review_items_section_id_fkey\" on \"review_items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "review_items_section_id_fkey",
+        "table": "review_items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"review_items_section_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "review_items_section_id_fkey",
+          "public",
+          "\"public\".\"review_items\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"review_items_section_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"review_items\"\nADD CONSTRAINT \"review_items_section_id_fkey\"\nFOREIGN KEY (\"section_id\")\nREFERENCES \"public\".\"sections\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"review_items_section_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "review_items_section_id_fkey",
+          "public",
+          "\"public\".\"review_items\""
+        ]
+      }
+    ]
+  }
+]

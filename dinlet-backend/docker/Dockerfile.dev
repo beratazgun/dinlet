@@ -1,0 +1,17 @@
+FROM node:24-alpine
+
+RUN apk add --no-cache python3 make g++ && corepack enable
+ENV CI=true
+
+WORKDIR /app
+
+# pnpm-workspace.yaml, izin verilen native build script'lerini (argon2, esbuild, ...)
+# tanımladığı için install adımında gereklidir; olmadan pnpm ERR_PNPM_IGNORED_BUILDS verir.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install
+
+EXPOSE 3000
+
+# Kaynak kod compose'ta `.:/app` volume'u ile runtime'da mount edilir; bu yüzden
+# contract:emit build sırasında değil, container başlarken (source mevcutken) çalıştırılır.
+CMD ["sh", "-c", "pnpm run contract:emit && pnpm run start:dev"]

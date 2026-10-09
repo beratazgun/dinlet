@@ -1,0 +1,100 @@
+@import 'tailwindcss';
+@import 'uniwind';
+@import 'panelui-native/theme.css';
+
+/* Tailwind only generates the classes it can see, and the components live in
+   the package rather than in this project — without this line every one of
+   them renders unstyled, which reads like a broken install. */
+@source './node_modules/panelui-native/src';
+
+@theme {
+  /* Brand Palette Direct Utility Tokens */
+  --color-brand-indigo: #1928B4;
+  --color-brand-indigo-dark: #1C2EBD;
+  --color-brand-blue-deep: #1322A0;
+  --color-brand-blue-vivid: #2D40E5;
+  --color-brand-blue-bright: #293ADE;
+  --color-brand-accent: #96A6F9;
+  --color-brand-white: #FFFFFF;
+  --color-brand-offwhite: #FCFCFD;
+  --color-brand-lavender: #F4F5FD;
+  --color-brand-mist: #DCE1FF;
+  --color-brand-surface: #EEF0FB;
+
+  /* Text and lines on the light brand surfaces */
+  --color-brand-ink: #0E1238;
+  --color-brand-body: #2A2F55;
+  --color-brand-ink-soft: #575C7A;
+  --color-brand-muted: #6B7090;
+  --color-brand-placeholder: #8A8FAD;
+  --color-brand-line: #E1E4F3;
+  --color-brand-hairline: #E4E7F6;
+  --color-brand-danger: #D92D45;
+
+  /*
+   * Fonts. On native a weight is a separately registered face, so the weight
+   * utilities are pointed at the Figtree faces loaded in app/_layout.tsx —
+   * every `font-semibold` in the app and in PanelUI then draws Figtree.
+   * Headings use Bricolage Grotesque through `font-display*`.
+   */
+  --font-normal: Figtree_400Regular;
+  --font-medium: Figtree_500Medium;
+  --font-semibold: Figtree_600SemiBold;
+  --font-bold: Figtree_700Bold;
+  --font-display: BricolageGrotesque_800ExtraBold;
+  --font-display-bold: BricolageGrotesque_700Bold;
+}
+
+@layer theme {
+  :root {
+    @variant light {
+      /* Backgrounds & Surfaces */
+      --color-background: #FCFCFD;
+      --color-foreground: #0E1238;
+      --color-muted-foreground: #575C7A;
+      --color-border: #E4E7F6;
+      --color-input: #C5CAE3;
+      --color-card: #FFFFFF;
+      --color-popover: #FFFFFF;
+      --color-overlay: #FFFFFF;
+      --color-surface: #F4F5FD;
+      --color-surface-secondary: #FFFFFF;
+      --color-surface-tertiary: #EEF0FB;
+
+      /* Primary Brand & Accents */
+      --color-primary: #1928B4;
+      --color-primary-foreground: #FFFFFF;
+      --color-accent: #F4F5FD;
+      --color-accent-foreground: #1928B4;
+      --color-ring: #2D40E5;
+
+      /* Charts */
+      --color-chart-1: #1928B4;
+      --color-chart-2: #2D40E5;
+      --color-chart-3: #96A6F9;
+      --color-chart-4: #1C2EBD;
+      --color-chart-5: #1322A0;
+    }
+
+    @variant dark {
+      /* Backgrounds & Surfaces */
+      --color-border: #2E3352;
+      --color-input: #C5CAE3;
+
+      /* In Dark Mode, vivid blue provides accessible contrast and brand vibrance */
+      --color-primary: #2D40E5;
+      --color-primary-foreground: #FFFFFF;
+      --color-ring: #293ADE;
+      --color-accent: rgba(45, 64, 229, 0.16);
+      --color-accent-foreground: #96A6F9;
+
+      /* Charts */
+      --color-chart-1: #2D40E5;
+      --color-chart-2: #96A6F9;
+      --color-chart-3: #293ADE;
+      --color-chart-4: #1C2EBD;
+      --color-chart-5: #1928B4;
+    }
+  }
+}
+

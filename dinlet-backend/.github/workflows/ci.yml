@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # package.json'da `packageManager` alanı olmadığı için sürüm burada verilir.
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # generated/ (contract) repoda commit'li olduğu için contract:emit gerekmez
+      - run: pnpm run typecheck
+      - run: pnpm exec oxlint src
+      - run: pnpm run test
+      - run: pnpm run build
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: quality
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: dinlet-user
+          POSTGRES_PASSWORD: dinlet-pass
+          POSTGRES_DB: dinlet-test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U dinlet-user -d dinlet-test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      localstack:
+        # `latest` LOCALSTACK_AUTH_TOKEN istiyor; docker-compose ile aynı sürüm.
+        image: localstack/localstack:4.7
+        env:
+          SERVICES: s3
+        ports: ["4566:4566"]
+        options: >-
+          --health-cmd "curl -sf http://localhost:4566/_localstack/health"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Şema, seed ve bucket kurulumu vitest globalSetup'ta yapılır
+      # (test/e2e/support/global-setup.ts); bağlantı ayarları
+      # test/e2e/support/setup-env.ts varsayılanlarıdır.
+      - run: pnpm run test:e2e
+
+  # main'e push: API imajı GHCR'a, sonra Dokploy deploy.
+  images:
+    runs-on: ubuntu-latest
+    needs: [quality, e2e]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: API imajı
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          target: runner
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/dinlet-api:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/dinlet-api:latest
+
+  # Dokploy yeni imajı çekip yeniden başlatır; container açılırken önce
+  # migration'ları uygular (docker/entrypoint.sh), sonra API başlar.
+  deploy:
+    runs-on: ubuntu-latest
+    needs: images
+    environment: production
+    steps:
+      # Sır: DOKPLOY_DEPLOY_WEBHOOK (Dokploy → uygulama → Deployments → Webhook URL).
+      - name: Dokploy deploy
+        run: curl -fsS -X POST "${{ secrets.DOKPLOY_DEPLOY_WEBHOOK }}"
