@@ -96,11 +96,10 @@ python bench.py tts --minutes 10
 python bench.py extract ornek.pdf
 ```
 
-## Model ve kütüphane lisansları
+## Model ve kütüphane lisansları ve teşekkürler
 
-Docling (MIT), ema-lightning (Apache 2.0), pdfplumber (MIT). Model kartı,
-dinleyiciye sesin yapay zekâ ile üretildiğinin söylenmesini ister; uygulama
-bunu oynatıcıda gösterir.
+Docling (MIT), [ema-lightning](https://huggingface.co/canberkkkkkk/ema-lightning) (Apache 2.0), pdfplumber (MIT).
+Türkçe TTS modeli için [@canberkkkkkk](https://huggingface.co/canberkkkkkk)'e teşekkür ederiz. Model kartı, dinleyiciye sesin yapay zekâ ile üretildiğinin söylenmesini ister; uygulama bunu oynatıcıda gösterir.
 
 ## Lisans
 

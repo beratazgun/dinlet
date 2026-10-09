@@ -15,7 +15,7 @@ Python worker.
 | ----------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------- |
 | [`dinlet-app`](dinlet-app/)         | iOS ve Android istemci: yükleme, oynatıcı, tekrar, mağaza, kendi sesinle kayıt | Expo 57, React Native 0.86, TanStack Query  |
 | [`dinlet-backend`](dinlet-backend/) | REST/WebSocket API: oturum, not işleme akışı, abonelik, mağaza, bildirim       | NestJS 12, Fastify, Prisma 8, BullMQ        |
-| [`dinlet-worker`](dinlet-worker/)   | PDF → Markdown, Türkçe seslendirme, kendi sesinle kayıtları birleştirme        | Python 3.12, Docling, ema-lightning, ffmpeg |
+| [`dinlet-worker`](dinlet-worker/)   | PDF → Markdown, Türkçe seslendirme, kendi sesinle kayıtları birleştirme        | Python 3.12, Docling, [ema-lightning](https://huggingface.co/canberkkkkkk/ema-lightning), ffmpeg |
 
 Her klasörün kendi README'si ayrıntıları anlatır.
 
@@ -85,6 +85,10 @@ API `http://localhost:3000/api/v1` adresinde, Swagger arayüzü `/api/v1/doc`'ta
 - [Yol haritası](roadmap.md): fazlar, kararlar ve ilerleme
 - [Geliştirici notları](dinlet-backend/docs/development.md): oturum modeli, altyapı, Prisma 8
 - [Production kurulumu](dinlet-backend/DEPLOY.md): Dokploy, Cloudflare, R2, RevenueCat
+
+## Teşekkürler
+
+Türkçe seslendirme altyapısında kullandığımız hızlı ve kaliteli [ema-lightning](https://huggingface.co/canberkkkkkk/ema-lightning) modelini açık kaynak olarak toplulukla paylaştığı için [@canberkkkkkk](https://huggingface.co/canberkkkkkk)'e çok teşekkürler! 🎧
 
 ## Lisans
 
